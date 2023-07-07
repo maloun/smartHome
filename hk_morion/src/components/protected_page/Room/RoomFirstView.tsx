@@ -1,47 +1,38 @@
 import React, {useState} from 'react';
+import {IDevice} from "../../../models/response/HomeResponse";
+import {PopupRoom} from "./PopupRoom";
+interface Interface {
+    devices:IDevice[]
+}
 
-const RoomFirstView = () => {
+const RoomFirstView = ({devices}:Interface) => {
     const [popupIsOpen, setPopupIsOpen] = useState(false)
+    const [popupData, setSetpopupData] = useState<IDevice>()
 
+    const onClickHandler = (device:IDevice)=>{
+        setPopupIsOpen(!popupIsOpen)
+        setSetpopupData(device)
+    }
 
+    const DeviceList = devices?.map((device)=>{
+        return(
+            <div className={"room-deviceContainer"} data-deviceStatus={true}
+                 onClick={()=>onClickHandler(device)}>
+                <div className={"room-device-title"}>{device.name}</div>
+                <div className={"room-device-id"}>id {device.id}</div>
+                <img src={"/Pictures/imageDevice.png"}/>
+            </div>
+        )
+    })
 
     return (
         <div className={"room-devices"}>
-            <div className={"room-deviceContainer"} data-deviceStatus={true}
-                 onClick={() => setPopupIsOpen(!popupIsOpen)}>
-                <div className={"room-device-title"}>Термостат</div>
-                <div className={"room-device-id"}>id 23424534</div>
-                <div className={"room-device-lastInfo"}>Последняя информация 23.06 в 23:58</div>
-                <img src={"/Pictures/imageDevice.png"}/>
-            </div>
-
-            <div className={"room-deviceContainer"} data-deviceStatus={false}>
-                <div className={"room-device-title"}>Модель</div>
-                <div className={"room-device-id"}>id 23424534</div>
-                <div className={"room-device-lastInfo"}>Последняя информация 23.06 в 23:58</div>
-                <img src={"/Pictures/imageDevice.png"}/>
-            </div>
-            <div className={"room-deviceContainer"} data-deviceStatus={false}>
-                <div className={"room-device-title"}>Модель</div>
-                <div className={"room-device-id"}>id 23424534</div>
-                <div className={"room-device-lastInfo"}>Последняя информация 23.06 в 23:58</div>
-                <img src={"/Pictures/imageDevice.png"}/>
-            </div>
-
-
-            <div className={"room-popup"} data-isOpen={popupIsOpen}>
-                <div className={"room-popup-title"}>Модель</div>
-                <div className={"room-popup-id"}>id 23424534</div>
-                <div className={"room-popup-lastInfo"}>Последняя информация 23.06 в 23:58</div>
-                <ul>
-                    <li>
-                        info
-                    </li>
-                </ul>
-                <img className={"room-popup-closeBtn"} src={"/Pictures/Крестик.svg"}
-                     onClick={() => setPopupIsOpen(false)}/>
-            </div>
-
+            {DeviceList}
+            <PopupRoom
+                handler={setPopupIsOpen}
+                isOpen={popupIsOpen}
+                data={popupData}
+            />
         </div>
     );
 };

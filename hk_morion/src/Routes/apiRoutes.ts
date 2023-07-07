@@ -6,5 +6,10 @@ export const ApiRoutes = {
     },
     Home:{
         INDEX:'/Home/index',
+        DEVICES:'/Home/Devices',
+        TERMOSTAT:'/Home/Termostat',
+        DIMMEROFF:'/Home/DimmerOff',
+        DIMMERON:'/Home/DimmerOn',
+        DIMMER:'/Home/Dimmer',
     }
 }

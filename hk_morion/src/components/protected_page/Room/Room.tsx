@@ -1,13 +1,27 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import "./Room.css"
 import RoomSecondView from "./RoomSecondView";
 import RoomFirstView from "./RoomFirstView";
 import {Context} from "../../../index";
+import HomeService from "../../../services/HomeService";
+import {IDevice} from "../../../models/response/HomeResponse";
 const Room = () => {
     const {store} = useContext(Context)
 
+    const [devices,setDevices]=useState<IDevice[]>([])
+
+    useEffect(()=>{
+        HomeService.devices()
+            .then((res)=>{
+                if(res.status===200)
+                    setDevices(res.data)
+            })
+    },[])
+
     store.setUrl(window.location.hash)
     store.setTitle('Помещение')
+
+
 
     const [isRoom, setIsRoom] = useState(false);
     return (
@@ -36,7 +50,10 @@ const Room = () => {
                 <img className={"room-sliderListRooms"} src={"/Pictures/iconListRooms.svg"}/>
             </div>
 
-            {isRoom? <RoomSecondView/> : <RoomFirstView/>}
+
+
+            {isRoom? <RoomSecondView/> :
+                <RoomFirstView devices={devices}/>}
 
         </div>
     );

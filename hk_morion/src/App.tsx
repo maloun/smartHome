@@ -9,6 +9,7 @@ import RequireAuth from './components/Auth/RequireAuth';
 import {Pay} from "./components/protected_page/Pay/Pay";
 import {Services} from "./components/protected_page/Services/Services";
 import {Events} from "./components/protected_page/Events/Events";
+import WorkerHome from "./components/protected_page/Home/WorkerHome/WorkerHome";
 
 const ROLES = {
     User: 'Customer',

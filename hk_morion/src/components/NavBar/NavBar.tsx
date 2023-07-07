@@ -24,7 +24,7 @@ const NavBar = () => {
   return(
       <>
           {
-              (store.url.indexOf(SpaRoutes.LOGIN)===-1)&&
+              (store.url.indexOf(SpaRoutes.LOGIN)===-1 && store.roles.includes('Customer'))&&
               <div className={'navbar-div'}>
                   <Link onClick={clickHandler} to={SpaRoutes.SERVICES}>
                       <img src={store.url.indexOf(SpaRoutes.SERVICES)!=-1?'/Pictures/СервисTrue.svg':'/Pictures/Сервис.svg'}/>

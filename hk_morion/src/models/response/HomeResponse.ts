@@ -3,3 +3,8 @@ export interface IndexResponse {
     waterSpendCold:number;
     electricitySpend:number;
 }
+export interface IDevice {
+    id:string;
+    name:string;
+    type:string;
+}
