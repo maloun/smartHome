@@ -1,0 +1,211 @@
+.home-mainContainer{
+    width: 100%;
+    font-family: Montserrat, sans-serif;
+}
+.home-header{
+    width: 100%;
+    min-height: 300px;
+    border-image-source: url("/public/Pictures/picHeader.svg");
+    border-image-slice: 0 fill;
+}
+.home-user{
+    display: flex;
+    flex-direction: row;
+    padding: 50px 24px 0 24px;
+    align-items: center;
+}
+.home-user img{
+    width: 54px;
+    height: 54px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.home-userName{
+    color: white;
+    margin-left: 10px;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+.home-userAddress{
+    color: white;
+    margin-left: 10px;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.home-search{
+    margin: 20px 24px;
+    object-fit: fill;
+    position: relative;
+    align-items: center;
+}
+.home-search img {
+    position: absolute;
+    margin: 8px;
+    left: 0;
+    z-index: 2;
+}
+.home-search input {
+    padding-left: 25px;
+    padding-right: 10px;
+    width: 100%;
+    height: 30px;
+    border-radius: 10px;
+    backdrop-filter: blur(3px);
+    background: #FFFFFF33;
+    background-clip: padding-box;
+    border: 3px solid #FFFFFF33;
+}
+.home-search input:focus {
+    color: black;
+    background-color: #FFFFFF33;
+    border-color: #FFFFFF33;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(158, 158, 158, 0.25);
+}
+.home-serviceButtons {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.home-serviceButton {
+    width: 25%;
+    color: #FFF;
+    text-align: center;
+    display: grid;
+    justify-content: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    white-space: pre-wrap;
+}
+
+.home-serviceButton div{
+    width: 40px;
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    background-color: #4BA3B5;
+    border-radius: 50%;
+    border: none;
+
+    padding: 20px;
+}
+.home-serviceButton div img {
+    object-fit: contain;
+}
+
+.home-diagram{
+    margin: 50px auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.home-diagramText {
+    right: 54%;
+    top: 5%;
+    position: absolute;
+    text-align: right;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    /* border-bottom: 1px solid green; */
+}
+
+@property --p{
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+.home-ring[data-p="0"]{
+    --p:0;
+}
+.home-ring[data-p="10"]{
+    --p:10;
+}
+.home-ring[data-p="20"]{
+    --p:20;
+}
+.home-ring[data-p="30"]{
+    --p:30;
+}
+.home-ring[data-p="40"]{
+    --p:40;
+}
+.home-ring[data-p="50"]{
+    --p:50;
+}
+.home-ring[data-p="60"]{
+    --p:60;
+}
+.home-ring[data-p="70"]{
+    --p:70;
+}
+
+.home-ring1{
+    --b:22px;
+    --c:#4ba3b5;
+    --w:200px;
+}
+.home-ring2{
+     --b:22px;
+     --c:#7ebdca;
+     --w:150px;
+ }
+.home-ring3{
+    --b:22px;
+    --c:#b2d7df;
+    --w:100px;
+}
+
+.ring {
+
+    width:var(--w);
+    aspect-ratio:1;
+    position: relative;
+    display:inline-grid;
+    margin:5px;
+    place-content:center;
+    font-size:25px;
+    font-weight:bold;
+    font-family:sans-serif;
+}
+.ring:before,
+.ring:after {
+    content:"";
+    position:absolute;
+    border-radius:50%;
+}
+.ring:before {
+    inset:0;
+    background:
+            radial-gradient(farthest-side,var(--c) 98%,#0000) top/var(--b) var(--b) no-repeat,
+            conic-gradient(var(--c) calc(var(--p)*1%),#0000 0);
+    -webkit-mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
+    mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
+}
+.ring:after {
+    inset:calc(50% - var(--b)/2);
+    background:var(--c);
+    transform:rotate(calc(var(--p)*3.6deg)) translateY(calc(50% - var(--w)/2));
+}
+.animate {
+    animation:p 3s .8s both;
+}
+.no-round:before {
+    background-size:0 0,auto;
+}
+.no-round:after {
+    content:none;
+}
+@keyframes p {
+    from{--p:0}
+}

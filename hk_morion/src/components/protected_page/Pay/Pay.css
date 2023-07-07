@@ -1,0 +1,43 @@
+.pay-div{
+    padding: 50px 24px 20px;
+}
+.pay-header-text{
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 37px;
+    margin-bottom: 20px;
+}
+.pay-item {
+    height: 45px;
+    display: flex;
+    width: calc(100% - 28px);
+    background-color: #4BA3B5;
+    border-radius: 10px;
+    font-weight: 700;
+    line-height: 17px;
+    color: white;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 14px;
+    padding-right: 14px;
+    margin-bottom: 10px;
+    opacity: 0;
+    transition: 2s;
+    animation:show 3s 1;
+    animation-fill-mode: forwards;
+}
+@keyframes show {
+   0%{
+       opacity: 0;
+   }
+    100%{
+        opacity: 1;
+    }
+}
+.pay-item div{
+    font-size: 20px;
+    line-height: 24px;
+}
+.arrow-img{
+    width: 20px;
+}

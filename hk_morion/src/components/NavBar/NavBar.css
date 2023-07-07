@@ -1,0 +1,11 @@
+.navbar-div {
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    background-color: #F6F6F6;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}

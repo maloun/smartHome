@@ -1,0 +1,4 @@
+{
+    "dotnet.defaultSolution": "smartHome_backend.sln",
+    "FSharp.suggestGitignore": false
+}

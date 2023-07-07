@@ -1,0 +1,4 @@
+bin/Debug/net6.0
+obj/Debug/net6.0
+/.vs
+Properties/PublishProfiles/PRODUCTION (DO NOT DEPLOY BEFORE TEST).pubxml.user

@@ -1,0 +1,486 @@
+import React, { FC, useContext, useState, useEffect } from 'react';
+import { Context } from "../../../../index";
+import './buyer.css'
+import { useNavigate } from "react-router-dom";
+import InputMask from 'react-input-mask';
+import CustomSelect from '../../SelectCity/CustomSelect';
+import $api from '../../../../api/axios';
+import {IDropdownOption, IRegion} from "../../../../models/models"
+import { ICity } from "../../../../models/models"
+import UploadService from "../../../../services/FileUploadService";
+import { IFile } from "../../../../models/models"
+import { IByerInfo } from "../../../../models/models"
+import CustomNavigateHeader from "../../../customUI/CustomNavigateHeader/CustomNavigateHeader";
+import CustomDropdown from "../../../customUI/CustomDropdown/CustomDropdown";
+import {MenuSticky} from "../../../Layout/MenuSticky/MenuSticky";
+
+
+const Buyer: FC = () => {
+
+    const { store } = useContext(Context)
+
+    const [UserInfo, setUserInfo] = useState<IByerInfo>({})
+
+    const REGIONS_URL = "/Home/regions";
+    const POST_USER_URL = "/Authenticate/register-kosmetolog";
+
+    const [regionName,setRegionName] = useState("Регион")
+    const [cityName,setCityName] = useState("Город")
+    const [regions, setRegions] = useState<IRegion[]>([]); 
+    const [cities, setCities] = useState<ICity[]>([]);
+    const [imagePreviewUrl, setimagePreviewUrl] = useState<any>();
+
+    const [pd_check, setpd_check] = useState<boolean>(false);
+    
+    const [password_again, setPasswordAgain] = useState<string>('');
+
+    const [isRevealPwd, setIsRevealPwd] = useState(false);
+
+    const [emailError, setEmailError] = useState<string>('');
+    const [PasswordError, setPasswordError] = useState<Array<string>>([]);
+    const [PasswordError_again, setPasswordError_again] = useState<string>('');
+    const [DiplomaError, setDiplomaError] = useState<string>('');
+    const [PhoneError, setPhoneError] = useState<string>('');
+
+    const [currentFile, setCurrentFile] = useState<File>();
+    const [message, setMessage] = useState<string>("");
+    const [fileInfos, setFileInfos] = useState<Array<IFile>>([]);
+    const [FileError, setFileError] = useState<string>('Выберите файл');
+    const [previewDiplom, setPreviewDiplom] = useState<string>()
+
+    const [PasswordErrorNum, setPasswordErrorNum] = useState<string>('Не хватает цифр');
+    const [PasswordErrorSym, setPasswordErrorSym] = useState<string>('Не хватает специального символа (!"№;%:?*()_-+=.)');
+    const [PasswordErrorLowCh, setPasswordErrorLowCh] = useState<string>('Не хватает маленькой буквы');
+    const [PasswordErrorHiCh, setPasswordErrorHiCh] = useState<string>('Не хватает заглавной буквы');
+    const [PasswordErrorLen, setPasswordErrorLen] = useState<string>('Длина пароля минимум 6 символов');
+
+    useEffect(() => {
+        $api.get(REGIONS_URL).then((resp) => {
+            // устанавливаем регионы
+            setRegions(resp.data.regions);
+            //// и города из первого региона по умолчанию
+            //setCities(list[0].cities);
+        });
+        UploadService.getFiles().then((response) => {
+            setFileInfos(response.data);
+        });
+    }, []);    
+
+    const handleInputChange = (e: any) => {
+        const { name, value } = e.target;
+
+        if (name == "phoneNumber") {
+            if (/_/.test(e.target.value)) {
+                setPhoneError('Неверно указан телефон');
+            } else {
+                setPhoneError('');
+            }
+        }
+        if (name == "email") {
+            const reEmail = /([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?(\.[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?)+/
+            if (!reEmail.test(String(e.target.value).toLowerCase())) {
+                setEmailError('Введите корректный email')
+            } else {
+                setEmailError('')
+            }
+        }
+        if (name == "numberDiplom") {
+          if (e.target.value.match(/^\d+$/)) {
+                e.target.value = e.target.value.replace(/^\d+$/, '');
+                    setDiplomaError('');
+                }
+              else {
+               setDiplomaError("Неверно указан номер диплома");
+            }
+        }
+
+        if (name == "password") {
+        //    const mass = [['Не хватает цифр', /(?=.*[0-9])/],
+        //    ['Не хватает специального символа (!"№;%:?*()_-+=.)', /(?=.*[!@#$%^&*.])/],
+        //    ['Не хватает маленькой буквы', /(?=.*[a-z])/],
+        //    ['Не хватает заглавной буквы', /(?=.*[A-Z])/],
+        //    ['Длина пароля минимум 6 символов', /[0-9a-zA-Z!@#$%^&*.]{6,}/],
+        //    ]
+
+            const reNum = /(?=.*[0-9])/
+            const reSym = /(?=.*[!@#$%^&*.])/
+            const reLowCh = /(?=.*[a-z-а-яё])/
+            const reHiCh = /(?=.*[A-Z-А-ЯЁ])/
+            const reLen = /[0-9a-z-а-яёA-Z-А-ЯЁ!@#$%^&*.]{6,}/
+
+            if (!reNum.test(String(e.target.value))) {
+                setPasswordErrorNum('Не хватает цифр')
+            } else {
+                setPasswordErrorNum('')
+            }
+            if (!reSym.test(String(e.target.value))) {
+                setPasswordErrorSym('Не хватает специального символа (!"№;%:?*()_-+=.)')
+            } else {
+                setPasswordErrorSym('')
+            }
+            if (!reLowCh.test(String(e.target.value))) {
+                setPasswordErrorLowCh('Не хватает маленькой буквы')
+            } else {
+                setPasswordErrorLowCh('')
+            }
+            if (!reHiCh.test(String(e.target.value))) {
+                setPasswordErrorHiCh('Не хватает заглавной буквы')
+            } else {
+                setPasswordErrorHiCh('')
+            }
+            if (!reLen.test(String(e.target.value))) {
+                setPasswordErrorLen('Длина пароля минимум 6 символов')
+            } else {
+                setPasswordErrorLen('')
+            }
+
+            //let ermass: string[] = [];
+            //let noerr : string[] = [];
+
+            //for (let i = 0; i < mass.length; i++) {
+            //    const reg = new RegExp(mass[i][1])
+            //    if (!reg.test(String(e.target.value))) {
+            //        ermass.push(`${mass[i][0]}`)
+            //    }
+            //}
+                //setPasswordError(`${mass[i][0]}`)
+                //break
+                //} else {
+                //    setPasswordError('')
+                //}
+            //if (ermass.length > 0) {
+            //    setPasswordError(ermass)
+            //}
+            //else {
+            //    setPasswordError(noerr)
+            //}
+        }
+
+        setUserInfo({
+            ...UserInfo,
+            [name]: value
+        });
+    };
+
+    let ArrayRegions:IDropdownOption[] = []
+    regions.map((item)=>{
+        ArrayRegions.push({key:item.regionId,name:item.name})
+    })
+
+    let ArrayCitys:IDropdownOption[] = []
+    cities.map((item)=>{
+        ArrayCitys.push({key:item.cityId,name:item.name})
+    })
+
+    const PassAgainHandler = (e: any) => {
+        setPasswordAgain(e.target.value)
+        if (e.target.value != UserInfo["password"]) {
+            setPasswordError_again('Пароли должны совпадать')
+        } else {
+            setPasswordError_again('')
+        }
+    }
+
+    const onRegionsSelectChange = (val:string) => {
+        const RegionId = val;
+        setUserInfo({
+            ...UserInfo,
+            ["regionId"]: RegionId
+        });
+        const region = regions.find(item => item.regionId === RegionId);
+        const cities = region?.cities;
+        if ((cities != null) && cities.length != 0) setCities(cities);
+        else setCities([{ cityId: 'no', name: 'Нет городов', region: '', sorter: 0 }]);
+        setCityName("Город");
+    }
+
+    const onCitySelectChange = (val:string) => {
+        const CityId = val;
+        setUserInfo({
+            ...UserInfo,
+            ["cityId"]: CityId
+        });
+    }
+
+    const createFormData = (data: any) => {
+        return Object.keys(data).reduce((formData, key) => {
+            formData.append(key, data[key]);
+            return formData;
+        }, new FormData());
+    };
+    const refactorUserData = () => {
+        let mydata: any = { ...UserInfo }
+        for (const key in mydata) {
+            if (mydata[key] === null || mydata[key] === undefined)
+                delete mydata[key]
+        }
+        return mydata
+    }
+
+    const navigate = useNavigate();
+
+    const upload = () => {
+        if (UserInfo["lastName"] && UserInfo["firstName"] && UserInfo["vatherName"] && UserInfo["email"] && UserInfo["phoneNumber"] && UserInfo["numberDiplom"] && UserInfo["password"] && password_again && currentFile && pd_check) {
+            if ((!PhoneError) && (!DiplomaError) && (!emailError) && (!PasswordError) && (!PasswordError_again)) {
+
+                const data = createFormData(refactorUserData());
+                data.append("DiplomFile", currentFile);
+                store.register(data, POST_USER_URL)
+                    //.then(() => {
+                    //    navigate('/', { replace: true });
+                    //})
+                    .catch((err) => {
+                        if (err.response && err.response.data && err.response.data.message) {
+                            setMessage(err.response.data.message);
+                        } else {
+                            setMessage("Не получилось загрузить файл!");
+                        }
+                        setCurrentFile(undefined);
+                    });
+            }
+        }
+    };
+
+        
+
+
+    const selectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { files } = event.target;
+        const selectedFiles = files as FileList;
+
+        setCurrentFile(selectedFiles?.[0]);
+        setFileError('');
+
+        //let reader = new FileReader();
+        //event.target.files instanceof FileList ? reader.readAsDataURL(event.target.files[0]) : 'handle exception';
+        //reader.onloadend = () => {
+        //    setimagePreviewUrl(reader.result)
+        //}
+        if (event.target.files != null)
+        setimagePreviewUrl(URL.createObjectURL(event.target.files[0]))
+    }
+
+
+    return (
+        <div>
+            <MenuSticky/>
+                <CustomNavigateHeader
+                    trashClickHandler={() => { }}
+                    title={``}
+                    withTrash={false}
+                />
+            <section>
+                <h1 className={"register_top_header_bold"}>Регистрация</h1>
+                <h2 className={"register_header"}>Косметолог</h2>
+                <div className={"register_header_bold"}>Личные данные</div>
+                <div className={"register_input_text"}>Фамилия</div>
+                    <input
+                        name={"lastName"}
+                        className={"register_input"}
+                        type="text"
+                        onChange={(e) => handleInputChange(e)}
+                        value={UserInfo["lastName"]}
+                        placeholder={'Фамилия'}
+                        required
+                    />
+
+                <div className={"register_input_text"}>Имя</div>
+                    <input
+                        name={"firstName"}
+                        className={"register_input"}
+                        type="text"
+                        onChange={(e) => handleInputChange(e)}
+                        value={UserInfo["firstName"]}
+                        placeholder={'Имя'}
+                        required
+                    />
+
+                <div className={"register_input_text"}>Отчество</div>
+                    <input
+                        name={"vatherName"}
+                        className={"register_input"}
+                        type="text"
+                        onChange={(e) => handleInputChange(e)}
+                        value={UserInfo["vatherName"]}
+                        placeholder={'Отчество'}
+                        required
+                    />
+
+                <div className={"register_input_text"}>Электронная почта</div>
+                    <input
+                        name={"email"}
+                        className={"register_input"}
+                        type="text"
+                        onChange={(e) => handleInputChange(e)}
+                        value={UserInfo["email"]}
+                        placeholder={'Email'}
+                        required
+                    />
+                    <div className="invalid-feedback">{emailError}</div>
+
+                <div className={"register_input_text"}>Номер телефона</div>
+                    <InputMask
+                        name={"phoneNumber"}
+                        mask="+7 (999) 999-99-99"
+                        className={"register_input"}
+                        onChange={(e) => handleInputChange(e)}
+                        value={UserInfo["phoneNumber"]}
+                        placeholder={'+7 '}
+                        required
+                    />
+                    <div className="invalid-feedback">{PhoneError}</div>
+
+                <div className={"register_select_top_text"}>
+                        <div className={"register_select_text"}>Регион</div>
+                        <div className={"register_select_text"}>Город</div>
+                    </div>
+
+                <div className={"register_select_top_text"}>
+                    <div className={"register_select_component"}>
+                            {/*<CustomSelect*/}
+                            {/*    name={"regionId"}*/}
+                            {/*    placeholder={"Регион"}*/}
+                            {/*    id={"regions_select"}*/}
+                            {/*    options={regions}*/}
+                            {/*    onChange={onRegionsSelectChange}*/}
+                            {/*    value= {UserInfo["regionId"] ? UserInfo["regionId"] : "default"}*/}
+                            {/*    required*/}
+                            {/*/>*/}
+                        <CustomDropdown options={ArrayRegions} value={regionName} valueSetter={setRegionName} onChangeHandler={onRegionsSelectChange}/>
+                    </div>
+                    <div className={"register_select_component"}>
+                            {/*<CustomSelect*/}
+                            {/*    name={"cityId"}*/}
+                            {/*    placeholder={"Город"}*/}
+                            {/*    id={"cities_select"}*/}
+                            {/*    options={cities}*/}
+                            {/*    onChange={onCitySelectChange}*/}
+                            {/*    value={UserInfo["cityId"] ? UserInfo["cityId"] : "default"}*/}
+                            {/*    required*/}
+                            {/*/>*/}
+                        <CustomDropdown options={ArrayCitys} value={cityName} valueSetter={setCityName} onChangeHandler={onCitySelectChange}/>
+                    </div>
+                    </div>
+
+                <div className={"register_header_bold"}>Данные об образовании</div>
+
+                <div className={"register_input_text"}>Диплом о высшем образовании</div>
+
+                    <input
+                        id={"input-numberDiplom"}
+                        className={"register_input"}
+                        type="text"
+                        name={"numberDiplom"}
+                        value={UserInfo["numberDiplom"]}
+                        placeholder={'Номер диплома'}
+                        onChange={(e) => handleInputChange(e)}
+                    />
+
+                    <div className="invalid-feedback">{DiplomaError}</div>
+
+                    <div className={"col_line"}>
+                        <div className={"row"}>
+                        {imagePreviewUrl && ( 
+                            <img className="preview" src={imagePreviewUrl} alt="" />
+                        )}
+                        <div className={"register_file_button_box"}>
+
+                            {currentFile ?
+                                <div className={"diploma_Text"}>
+                                    <div className={"diploma_Text2"}>{currentFile.name}</div>
+                                </div>
+                                :
+
+                                <div className={"diploma_Text"}>
+                                    <div className={"diploma_Text2"}>Скан/Фото диплома</div>
+                                </div>
+                            }
+                        <label htmlFor="my-file" className={"register_input-file-trigger"}>
+                                <img className={"register_clip_image"} src="/Pictures/Clip.svg"></img>
+                                <input
+                                    type="file"
+                                    id="my-file"
+                                    className={"input-file"}
+                                    onChange={selectFile}
+                                    accept="image/*"
+                                    required />
+                                Прикрепить
+                        </label>
+                            </div>
+                        </div>
+                        <div className="invalid-feedback">{FileError}</div>
+                    </div>
+
+                <div className={"register_header_bold"}>Придумайте пароль</div>
+
+                <div className={"register_input_text"}>Пароль</div>
+
+                    <div className={"row"}>
+                    <input
+                        name={"password"}
+                        className={"register_input"}
+                        type={isRevealPwd ? "text" : "password"}
+                        onChange={(e) => handleInputChange(e)}
+                        value={UserInfo["password"]}
+                        placeholder={"Пароль"}
+                        required
+                        />
+
+                        <img
+                            className={"eye_img"}
+                            src={isRevealPwd ? "/Pictures/eye2.svg" : "/Pictures/eye.svg"}
+                            onClick={() => setIsRevealPwd(prevState => !prevState)}
+                        />
+                    </div>
+                <div className="invalid_pass_feedback">{PasswordErrorNum}</div>
+                <div className="invalid_pass_feedback">{PasswordErrorSym}</div>
+                <div className="invalid_pass_feedback">{PasswordErrorLowCh}</div>
+                <div className="invalid_pass_feedback">{PasswordErrorHiCh}</div>
+                <div className="invalid_pass_feedback">{PasswordErrorLen}</div>
+
+
+                <div className={"register_input_text"}>Подтвердите пароль</div>
+                    <div className={"row"}>
+                        <input
+                        name={"password_again"}
+                        className={"register_input"}
+                        type={isRevealPwd ? "text" : "password"}
+                        onChange={(e) => PassAgainHandler(e)}
+                        value={password_again}
+                        placeholder={"Подтвердите пароль"}
+                        required
+                        />
+
+                        <img
+                            className={"eye_img"}
+                            src={isRevealPwd ? "/Pictures/eye2.svg" : "/Pictures/eye.svg"}
+                            onClick={() => setIsRevealPwd(prevState => !prevState)}
+                        />
+                    </div>
+
+                    <div className="invalid-feedback">{PasswordError_again}</div>
+
+                    <div className={"persolan_data_text"}>
+                    <input
+                        type="checkbox" 
+                        onChange={(e) => setpd_check(e.target.checked)}
+                        required /> Согласие на обработку персональных данных
+
+                    </div>
+
+                    <div className="row">
+                        <button
+                            form={"register_form_id"}
+                            className="btn_register"
+                            onClick={upload}
+                        /*    disabled={!FirstName || !VatherName || !email || !PhoneNumber || !Diploma || !password || !password_again}*/
+                        >
+                            Зарегистрироваться
+                        </button>
+                    </div>
+            </section>
+        </div>
+    );
+};
+
+export default Buyer;

@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/smartHome_backend/obj
+/smartHome_backend/bin/Release/net6.0
+/smartHome_backend/smartHome_backend.csproj.user
+/node_modules
+/cosmetic_project_frontend/obj/Release
+/.idea/vcs.xml
+/.idea/vcs.xml
+/smartHome_backend/LogFiles

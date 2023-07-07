@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\Projects\Cosmetic-project\cosmetic_project_backend\bin\Release\net6.0\publish\</_PublishTargetUrl>
+    <History>True|2023-03-01T08:54:19.8287629Z;True|2023-02-28T16:45:30.0483299+05:00;True|2023-01-24T16:40:58.3974251+05:00;True|2023-01-20T17:59:05.9381474+05:00;True|2023-01-20T17:23:00.4462503+05:00;True|2023-01-20T14:06:49.4606169+05:00;</History>
+    <LastFailureDetails />
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="MySQLConnection">
+      <Value>Server=localhost%3bDatabase=testdb%3bUser ID=local2%3bPassword=local2%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

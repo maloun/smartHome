@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "2r4VpuoDt5Tf6EzYLCM87LPflg8pwPEavI9EJf/xQymJGVoNeKiR7eUv8ZpkfZTfkeNIErCnc0C8RLKJKUX0Uw==",
+  "success": true,
+  "projectFilePath": "/home/bq-201/VR-IT/HackRepro/hk_morion_23/hk_morion/hk_morion.csproj",
+  "expectedPackageFiles": [
+    "/home/bq-201/.nuget/packages/microsoft.netcore.app.ref/5.0.0/microsoft.netcore.app.ref.5.0.0.nupkg.sha512",
+    "/home/bq-201/.nuget/packages/microsoft.aspnetcore.app.ref/5.0.0/microsoft.aspnetcore.app.ref.5.0.0.nupkg.sha512",
+    "/home/bq-201/.nuget/packages/microsoft.netcore.app.host.linux-x64/5.0.17/microsoft.netcore.app.host.linux-x64.5.0.17.nupkg.sha512"
+  ],
+  "logs": []
+}
